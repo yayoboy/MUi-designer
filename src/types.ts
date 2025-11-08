@@ -41,6 +41,8 @@ export interface ComponentProperties {
   border_color?: string;
   border_width?: number;
   image_path?: string;
+  image_data?: string; // Base64 encoded image data
+  image_name?: string; // Original image filename
   alignment?: string;
 }
 
