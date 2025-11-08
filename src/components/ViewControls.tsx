@@ -1,4 +1,8 @@
 import { useStore } from "../store";
+import * as Checkbox from "@radix-ui/react-checkbox";
+import * as Select from "@radix-ui/react-select";
+import * as Separator from "@radix-ui/react-separator";
+import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 
 export default function ViewControls() {
   const {
@@ -29,62 +33,111 @@ export default function ViewControls() {
   return (
     <div className="view-controls">
       <div className="control-group">
-        <label>Zoom: {Math.round(zoom * 100)}%</label>
-        <div className="button-group">
-          <button onClick={handleZoomOut} disabled={zoom <= 0.25}>
-            -
-          </button>
-          <button onClick={handleZoomReset}>Reset</button>
-          <button onClick={handleZoomIn} disabled={zoom >= 4}>
-            +
-          </button>
-        </div>
+        <span className="toolbar-label">
+          Zoom: {Math.round(zoom * 100)}%
+        </span>
+        <button
+          className="toolbar-button"
+          onClick={handleZoomOut}
+          disabled={zoom <= 0.25}
+        >
+          −
+        </button>
+        <button className="toolbar-button" onClick={handleZoomReset}>
+          Reset
+        </button>
+        <button
+          className="toolbar-button"
+          onClick={handleZoomIn}
+          disabled={zoom >= 4}
+        >
+          +
+        </button>
       </div>
 
+      <Separator.Root className="toolbar-separator" orientation="vertical" />
+
       <div className="control-group">
-        <label>
-          <input
-            type="checkbox"
+        <label className="checkbox-label">
+          <Checkbox.Root
+            className="checkbox-root"
             checked={showGrid}
-            onChange={toggleGrid}
-          />
-          Show Grid
+            onCheckedChange={toggleGrid}
+          >
+            <Checkbox.Indicator className="checkbox-indicator">
+              <CheckIcon />
+            </Checkbox.Indicator>
+          </Checkbox.Root>
+          <span>Show Grid</span>
         </label>
+
         {showGrid && (
           <div className="grid-size-control">
             <label>Grid Size:</label>
-            <select
-              value={gridSize}
-              onChange={(e) => setGridSize(Number(e.target.value))}
+            <Select.Root
+              value={gridSize.toString()}
+              onValueChange={(value) => setGridSize(Number(value))}
             >
-              <option value={5}>5px</option>
-              <option value={10}>10px</option>
-              <option value={20}>20px</option>
-              <option value={50}>50px</option>
-            </select>
+              <Select.Trigger className="select-trigger">
+                <Select.Value />
+                <Select.Icon>
+                  <ChevronDownIcon />
+                </Select.Icon>
+              </Select.Trigger>
+              <Select.Portal>
+                <Select.Content className="select-content">
+                  <Select.Viewport className="select-viewport">
+                    <Select.Item className="select-item" value="5">
+                      <Select.ItemText>5px</Select.ItemText>
+                    </Select.Item>
+                    <Select.Item className="select-item" value="10">
+                      <Select.ItemText>10px</Select.ItemText>
+                    </Select.Item>
+                    <Select.Item className="select-item" value="20">
+                      <Select.ItemText>20px</Select.ItemText>
+                    </Select.Item>
+                    <Select.Item className="select-item" value="50">
+                      <Select.ItemText>50px</Select.ItemText>
+                    </Select.Item>
+                  </Select.Viewport>
+                </Select.Content>
+              </Select.Portal>
+            </Select.Root>
           </div>
         )}
       </div>
 
+      <Separator.Root className="toolbar-separator" orientation="vertical" />
+
       <div className="control-group">
-        <label>
-          <input
-            type="checkbox"
+        <label className="checkbox-label">
+          <Checkbox.Root
+            className="checkbox-root"
             checked={showRulers}
-            onChange={toggleRulers}
-          />
-          Show Rulers
+            onCheckedChange={toggleRulers}
+          >
+            <Checkbox.Indicator className="checkbox-indicator">
+              <CheckIcon />
+            </Checkbox.Indicator>
+          </Checkbox.Root>
+          <span>Show Rulers</span>
         </label>
       </div>
 
+      <Separator.Root className="toolbar-separator" orientation="vertical" />
+
       <div className="control-group">
-        <label>
-          <input
-            type="checkbox"
+        <label className="checkbox-label">
+          <Checkbox.Root
+            className="checkbox-root"
             checked={snapToGrid}
-            onChange={toggleSnapToGrid}
-          />
-          Snap to Grid
+            onCheckedChange={toggleSnapToGrid}
+          >
+            <Checkbox.Indicator className="checkbox-indicator">
+              <CheckIcon />
+            </Checkbox.Indicator>
+          </Checkbox.Root>
+          <span>Snap to Grid</span>
         </label>
       </div>
     </div>
