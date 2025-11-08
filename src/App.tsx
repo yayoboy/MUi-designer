@@ -5,6 +5,7 @@ import Canvas from "./components/Canvas";
 import PropertiesPanel from "./components/PropertiesPanel";
 import ComponentsPanel from "./components/ComponentsPanel";
 import CodeViewer from "./components/CodeViewer";
+import ViewControls from "./components/ViewControls";
 import "./styles/App.css";
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
     <DndProvider backend={HTML5Backend}>
       <div className="app">
         <Toolbar />
+        <ViewControls />
         <div className="workspace">
           <ComponentsPanel />
           <Canvas />
