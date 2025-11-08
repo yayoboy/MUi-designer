@@ -3,7 +3,6 @@
 
 use serde::{Deserialize, Serialize};
 use std::fs;
-use std::path::PathBuf;
 
 // ============================================================================
 // Data Structures
@@ -284,7 +283,7 @@ fn generate_component_code(components: &[Component]) -> String {
                 }
                 if let Some(ref text) = comp.properties.text {
                     code.push(format!("  display.setCursor({}, {});",
-                        comp.x + 10, comp.y + (comp.height / 2) - 4));
+                        comp.x + 10, comp.y + (comp.height / 2) as i32 - 4));
                     code.push(format!("  display.println(\"{}\");", text));
                 }
             }

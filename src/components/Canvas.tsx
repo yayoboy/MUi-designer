@@ -138,7 +138,7 @@ function CanvasComponent({ component }: { component: Component }) {
 
 export default function Canvas() {
   const { project, addComponent, setSelectedComponent } = useStore();
-  const canvasRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLDivElement | null>(null);
 
   const [, drop] = useDrop(() => ({
     accept: "component",
@@ -175,13 +175,15 @@ export default function Canvas() {
     setSelectedComponent(null);
   };
 
+  const setCanvasRef = (node: HTMLDivElement | null) => {
+    canvasRef.current = node;
+    drop(node);
+  };
+
   return (
     <div className="canvas-container">
       <div
-        ref={(node) => {
-          canvasRef.current = node;
-          drop(node);
-        }}
+        ref={setCanvasRef}
         className="canvas"
         style={{
           width: project.display.width,
