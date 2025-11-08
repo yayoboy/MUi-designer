@@ -1,0 +1,261 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+}
+
+.workspace {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Toolbar Styles */
+.toolbar {
+  background-color: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.toolbar-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 24px;
+  background-color: var(--color-border);
+}
+
+.toolbar button {
+  padding: 6px 12px;
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.toolbar button:hover {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.toolbar input {
+  width: 200px;
+}
+
+/* Components Panel */
+.components-panel {
+  width: 220px;
+  background-color: var(--color-bg-secondary);
+  border-right: 1px solid var(--color-border);
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.components-panel h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+}
+
+.component-item {
+  padding: 10px 12px;
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  margin-bottom: 8px;
+  cursor: move;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.component-item:hover {
+  background-color: var(--color-bg-primary);
+  border-color: var(--color-accent);
+}
+
+.component-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Canvas Styles */
+.canvas-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg-primary);
+  position: relative;
+  overflow: auto;
+}
+
+.canvas {
+  background-color: white;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--color-border);
+}
+
+.canvas-component {
+  position: absolute;
+  cursor: move;
+  border: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.canvas-component:hover {
+  border-color: var(--color-accent);
+}
+
+.canvas-component.selected {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(0, 122, 204, 0.3);
+}
+
+.resize-handle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-accent);
+  border: 1px solid white;
+  border-radius: 50%;
+}
+
+.resize-handle.se {
+  bottom: -4px;
+  right: -4px;
+  cursor: se-resize;
+}
+
+/* Properties Panel */
+.properties-panel {
+  width: 280px;
+  background-color: var(--color-bg-secondary);
+  border-left: 1px solid var(--color-border);
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.properties-panel h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+}
+
+.property-group {
+  margin-bottom: 20px;
+}
+
+.property-group h4 {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.property-field {
+  margin-bottom: 12px;
+}
+
+.property-field input,
+.property-field select {
+  width: 100%;
+}
+
+.property-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+/* Code Viewer */
+.code-viewer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  background-color: var(--color-bg-secondary);
+  border-top: 1px solid var(--color-border);
+  transition: height 0.3s;
+  overflow: hidden;
+}
+
+.code-viewer.open {
+  height: 400px;
+}
+
+.code-viewer-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.code-viewer-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.code-viewer-tab {
+  padding: 6px 12px;
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+
+.code-viewer-tab.active {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.code-viewer-content {
+  height: calc(100% - 49px);
+  overflow: auto;
+}
+
+.code-viewer pre {
+  margin: 0;
+  padding: 16px;
+  font-family: "Consolas", "Monaco", monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.empty-state p {
+  margin-top: 8px;
+}
