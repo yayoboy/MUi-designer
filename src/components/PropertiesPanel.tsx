@@ -1,5 +1,9 @@
 import { useStore } from "../store";
 import { Protocol } from "../types";
+import * as Label from "@radix-ui/react-label";
+import * as Select from "@radix-ui/react-select";
+import * as Separator from "@radix-ui/react-separator";
+import { ChevronDownIcon, TrashIcon } from "@radix-ui/react-icons";
 
 export default function PropertiesPanel() {
   const { selectedComponent, updateComponent, deleteComponent, project, setDisplayConfig } =
@@ -14,8 +18,9 @@ export default function PropertiesPanel() {
           <h4>Dimensions</h4>
           <div className="property-row">
             <div className="property-field">
-              <label>Width</label>
+              <Label.Root htmlFor="display-width">Width</Label.Root>
               <input
+                id="display-width"
                 type="number"
                 value={project.display.width}
                 onChange={(e) =>
@@ -27,8 +32,9 @@ export default function PropertiesPanel() {
               />
             </div>
             <div className="property-field">
-              <label>Height</label>
+              <Label.Root htmlFor="display-height">Height</Label.Root>
               <input
+                id="display-height"
                 type="number"
                 value={project.display.height}
                 onChange={(e) =>
@@ -42,42 +48,82 @@ export default function PropertiesPanel() {
           </div>
         </div>
 
+        <Separator.Root className="property-separator" />
+
         <div className="property-group">
           <h4>Configuration</h4>
           <div className="property-field">
-            <label>Driver</label>
-            <select
+            <Label.Root htmlFor="driver-select">Driver</Label.Root>
+            <Select.Root
               value={project.display.driver}
-              onChange={(e) =>
+              onValueChange={(value) =>
                 setDisplayConfig({
                   ...project.display,
-                  driver: e.target.value,
+                  driver: value,
                 })
               }
             >
-              <option value="ST7789">ST7789</option>
-              <option value="ST7735">ST7735</option>
-              <option value="ILI9341">ILI9341</option>
-              <option value="SSD1306">SSD1306</option>
-            </select>
+              <Select.Trigger className="select-trigger" id="driver-select">
+                <Select.Value />
+                <Select.Icon>
+                  <ChevronDownIcon />
+                </Select.Icon>
+              </Select.Trigger>
+              <Select.Portal>
+                <Select.Content className="select-content">
+                  <Select.Viewport className="select-viewport">
+                    <Select.Item className="select-item" value="ST7789">
+                      <Select.ItemText>ST7789</Select.ItemText>
+                    </Select.Item>
+                    <Select.Item className="select-item" value="ST7735">
+                      <Select.ItemText>ST7735</Select.ItemText>
+                    </Select.Item>
+                    <Select.Item className="select-item" value="ILI9341">
+                      <Select.ItemText>ILI9341</Select.ItemText>
+                    </Select.Item>
+                    <Select.Item className="select-item" value="SSD1306">
+                      <Select.ItemText>SSD1306</Select.ItemText>
+                    </Select.Item>
+                  </Select.Viewport>
+                </Select.Content>
+              </Select.Portal>
+            </Select.Root>
           </div>
 
           <div className="property-field">
-            <label>Protocol</label>
-            <select
+            <Label.Root htmlFor="protocol-select">Protocol</Label.Root>
+            <Select.Root
               value={project.display.protocol}
-              onChange={(e) =>
+              onValueChange={(value) =>
                 setDisplayConfig({
                   ...project.display,
-                  protocol: e.target.value as Protocol,
+                  protocol: value as Protocol,
                 })
               }
             >
-              <option value={Protocol.SPI}>SPI</option>
-              <option value={Protocol.I2C}>I2C</option>
-            </select>
+              <Select.Trigger className="select-trigger" id="protocol-select">
+                <Select.Value />
+                <Select.Icon>
+                  <ChevronDownIcon />
+                </Select.Icon>
+              </Select.Trigger>
+              <Select.Portal>
+                <Select.Content className="select-content">
+                  <Select.Viewport className="select-viewport">
+                    <Select.Item className="select-item" value={Protocol.SPI}>
+                      <Select.ItemText>SPI</Select.ItemText>
+                    </Select.Item>
+                    <Select.Item className="select-item" value={Protocol.I2C}>
+                      <Select.ItemText>I2C</Select.ItemText>
+                    </Select.Item>
+                  </Select.Viewport>
+                </Select.Content>
+              </Select.Portal>
+            </Select.Root>
           </div>
         </div>
+
+        <Separator.Root className="property-separator" />
 
         <div className="property-group">
           <h4>Pinout</h4>
@@ -85,8 +131,9 @@ export default function PropertiesPanel() {
             <>
               <div className="property-row">
                 <div className="property-field">
-                  <label>CS Pin</label>
+                  <Label.Root htmlFor="cs-pin">CS Pin</Label.Root>
                   <input
+                    id="cs-pin"
                     type="number"
                     value={project.display.pinout.cs || ""}
                     onChange={(e) =>
@@ -101,8 +148,9 @@ export default function PropertiesPanel() {
                   />
                 </div>
                 <div className="property-field">
-                  <label>DC Pin</label>
+                  <Label.Root htmlFor="dc-pin">DC Pin</Label.Root>
                   <input
+                    id="dc-pin"
                     type="number"
                     value={project.display.pinout.dc || ""}
                     onChange={(e) =>
@@ -118,8 +166,9 @@ export default function PropertiesPanel() {
                 </div>
               </div>
               <div className="property-field">
-                <label>RST Pin</label>
+                <Label.Root htmlFor="rst-pin">RST Pin</Label.Root>
                 <input
+                  id="rst-pin"
                   type="number"
                   value={project.display.pinout.rst || ""}
                   onChange={(e) =>
@@ -137,8 +186,9 @@ export default function PropertiesPanel() {
           ) : (
             <div className="property-row">
               <div className="property-field">
-                <label>SDA Pin</label>
+                <Label.Root htmlFor="sda-pin">SDA Pin</Label.Root>
                 <input
+                  id="sda-pin"
                   type="number"
                   value={project.display.pinout.sda || ""}
                   onChange={(e) =>
@@ -153,8 +203,9 @@ export default function PropertiesPanel() {
                 />
               </div>
               <div className="property-field">
-                <label>SCL Pin</label>
+                <Label.Root htmlFor="scl-pin">SCL Pin</Label.Root>
                 <input
+                  id="scl-pin"
                   type="number"
                   value={project.display.pinout.scl || ""}
                   onChange={(e) =>
@@ -183,8 +234,9 @@ export default function PropertiesPanel() {
         <h4>Position & Size</h4>
         <div className="property-row">
           <div className="property-field">
-            <label>X</label>
+            <Label.Root htmlFor="component-x">X</Label.Root>
             <input
+              id="component-x"
               type="number"
               value={selectedComponent.x}
               onChange={(e) =>
@@ -195,8 +247,9 @@ export default function PropertiesPanel() {
             />
           </div>
           <div className="property-field">
-            <label>Y</label>
+            <Label.Root htmlFor="component-y">Y</Label.Root>
             <input
+              id="component-y"
               type="number"
               value={selectedComponent.y}
               onChange={(e) =>
@@ -209,8 +262,9 @@ export default function PropertiesPanel() {
         </div>
         <div className="property-row">
           <div className="property-field">
-            <label>Width</label>
+            <Label.Root htmlFor="component-width">Width</Label.Root>
             <input
+              id="component-width"
               type="number"
               value={selectedComponent.width}
               onChange={(e) =>
@@ -221,8 +275,9 @@ export default function PropertiesPanel() {
             />
           </div>
           <div className="property-field">
-            <label>Height</label>
+            <Label.Root htmlFor="component-height">Height</Label.Root>
             <input
+              id="component-height"
               type="number"
               value={selectedComponent.height}
               onChange={(e) =>
@@ -235,12 +290,15 @@ export default function PropertiesPanel() {
         </div>
       </div>
 
+      <Separator.Root className="property-separator" />
+
       <div className="property-group">
         <h4>Appearance</h4>
         {selectedComponent.properties.text !== undefined && (
           <div className="property-field">
-            <label>Text</label>
+            <Label.Root htmlFor="component-text">Text</Label.Root>
             <input
+              id="component-text"
               type="text"
               value={selectedComponent.properties.text || ""}
               onChange={(e) =>
@@ -255,8 +313,9 @@ export default function PropertiesPanel() {
           </div>
         )}
         <div className="property-field">
-          <label>Text Color</label>
+          <Label.Root htmlFor="text-color">Text Color</Label.Root>
           <input
+            id="text-color"
             type="color"
             value={selectedComponent.properties.color || "#000000"}
             onChange={(e) =>
@@ -270,8 +329,9 @@ export default function PropertiesPanel() {
           />
         </div>
         <div className="property-field">
-          <label>Background Color</label>
+          <Label.Root htmlFor="bg-color">Background Color</Label.Root>
           <input
+            id="bg-color"
             type="color"
             value={selectedComponent.properties.background_color || "#FFFFFF"}
             onChange={(e) =>
@@ -285,8 +345,9 @@ export default function PropertiesPanel() {
           />
         </div>
         <div className="property-field">
-          <label>Border Color</label>
+          <Label.Root htmlFor="border-color">Border Color</Label.Root>
           <input
+            id="border-color"
             type="color"
             value={selectedComponent.properties.border_color || "#CCCCCC"}
             onChange={(e) =>
@@ -301,8 +362,9 @@ export default function PropertiesPanel() {
         </div>
         {selectedComponent.properties.font_size !== undefined && (
           <div className="property-field">
-            <label>Font Size</label>
+            <Label.Root htmlFor="font-size">Font Size</Label.Root>
             <input
+              id="font-size"
               type="number"
               value={selectedComponent.properties.font_size || 14}
               onChange={(e) =>
@@ -318,18 +380,15 @@ export default function PropertiesPanel() {
         )}
       </div>
 
+      <Separator.Root className="property-separator" />
+
       <div className="property-group">
         <button
+          className="delete-button"
           onClick={() => deleteComponent(selectedComponent.id)}
-          style={{
-            width: "100%",
-            padding: "8px",
-            backgroundColor: "var(--color-danger)",
-            color: "white",
-            borderRadius: "4px",
-          }}
         >
-          Delete Component
+          <TrashIcon />
+          <span>Delete Component</span>
         </button>
       </div>
     </div>

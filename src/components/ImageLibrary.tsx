@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useDrag } from "react-dnd";
+import * as Collapsible from "@radix-ui/react-collapsible";
+import { ChevronDownIcon, ChevronRightIcon, Cross2Icon, UploadIcon } from "@radix-ui/react-icons";
 
 interface ImageItem {
   id: string;
@@ -42,7 +44,7 @@ function DraggableImage({ image }: { image: ImageItem }) {
 
 export default function ImageLibrary() {
   const [images, setImages] = useState<ImageItem[]>([]);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -75,51 +77,55 @@ export default function ImageLibrary() {
   };
 
   return (
-    <div className="image-library">
-      <div className="image-library-header" onClick={() => setIsExpanded(!isExpanded)}>
-        <h3>Image Library {isExpanded ? "▼" : "▶"}</h3>
-        <span className="image-count">{images.length} images</span>
-      </div>
-
-      {isExpanded && (
-        <>
-          <div className="upload-section">
-            <label htmlFor="image-upload" className="upload-button">
-              Upload Images
-            </label>
-            <input
-              id="image-upload"
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleFileUpload}
-              style={{ display: "none" }}
-            />
+    <Collapsible.Root className="image-library" open={isOpen} onOpenChange={setIsOpen}>
+      <Collapsible.Trigger className="image-library-trigger">
+        <div className="image-library-header">
+          <div className="header-left">
+            {isOpen ? <ChevronDownIcon /> : <ChevronRightIcon />}
+            <h3>Image Library</h3>
           </div>
+          <span className="image-count">{images.length}</span>
+        </div>
+      </Collapsible.Trigger>
 
-          <div className="image-library-grid">
-            {images.length === 0 ? (
-              <div className="empty-library">
-                <p>No images uploaded yet</p>
-                <p style={{ fontSize: 11 }}>Upload images to use in your design</p>
+      <Collapsible.Content className="collapsible-content">
+        <div className="upload-section">
+          <label htmlFor="image-upload" className="upload-button">
+            <UploadIcon />
+            <span>Upload Images</span>
+          </label>
+          <input
+            id="image-upload"
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleFileUpload}
+            style={{ display: "none" }}
+          />
+        </div>
+
+        <div className="image-library-grid">
+          {images.length === 0 ? (
+            <div className="empty-library">
+              <p>No images uploaded yet</p>
+              <p style={{ fontSize: 11 }}>Upload images to use in your design</p>
+            </div>
+          ) : (
+            images.map((image) => (
+              <div key={image.id} className="image-item-wrapper">
+                <DraggableImage image={image} />
+                <button
+                  className="delete-image-btn"
+                  onClick={() => handleDelete(image.id)}
+                  title="Delete image"
+                >
+                  <Cross2Icon />
+                </button>
               </div>
-            ) : (
-              images.map((image) => (
-                <div key={image.id} className="image-item-wrapper">
-                  <DraggableImage image={image} />
-                  <button
-                    className="delete-image-btn"
-                    onClick={() => handleDelete(image.id)}
-                    title="Delete image"
-                  >
-                    ×
-                  </button>
-                </div>
-              ))
-            )}
-          </div>
-        </>
-      )}
-    </div>
+            ))
+          )}
+        </div>
+      </Collapsible.Content>
+    </Collapsible.Root>
   );
 }
