@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDrop } from "react-dnd";
 import { useStore } from "../store";
 import { Component, ComponentType } from "../types";
@@ -138,15 +138,19 @@ function CanvasComponent({ component }: { component: Component }) {
 
 export default function Canvas() {
   const { project, addComponent, setSelectedComponent } = useStore();
-  const canvasRef = useRef<HTMLDivElement>(null);
 
-  const [, drop] = useDrop(() => ({
+  const [{ isOver }, drop] = useDrop(() => ({
     accept: "component",
     drop: (item: { componentType: ComponentType }, monitor) => {
       const offset = monitor.getClientOffset();
-      if (!offset || !canvasRef.current) return;
 
-      const canvasRect = canvasRef.current.getBoundingClientRect();
+      if (!offset) return;
+
+      // Get the canvas element from the drop target
+      const canvasElement = document.querySelector('.canvas');
+      if (!canvasElement) return;
+
+      const canvasRect = canvasElement.getBoundingClientRect();
       const x = offset.x - canvasRect.left;
       const y = offset.y - canvasRect.top;
 
@@ -169,6 +173,9 @@ export default function Canvas() {
 
       addComponent(newComponent);
     },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
   }));
 
   const handleCanvasClick = () => {
@@ -178,14 +185,13 @@ export default function Canvas() {
   return (
     <div className="canvas-container">
       <div
-        ref={(node) => {
-          canvasRef.current = node;
-          drop(node);
-        }}
+        ref={drop}
         className="canvas"
         style={{
           width: project.display.width,
           height: project.display.height,
+          backgroundColor: isOver ? "#f0f0f0" : "#ffffff",
+          transition: "background-color 0.2s ease",
         }}
         onClick={handleCanvasClick}
       >
