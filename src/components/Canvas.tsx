@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { useDrop } from "react-dnd";
 import { useStore } from "../store";
 import { Component, ComponentType } from "../types";
@@ -138,7 +138,7 @@ function CanvasComponent({ component }: { component: Component }) {
 
 export default function Canvas() {
   const { project, addComponent, setSelectedComponent } = useStore();
-  const canvasRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLDivElement | null>(null);
 
   const [, drop] = useDrop(() => ({
     accept: "component",
@@ -175,13 +175,18 @@ export default function Canvas() {
     setSelectedComponent(null);
   };
 
+  const setRefs = useCallback(
+    (node: HTMLDivElement | null) => {
+      canvasRef.current = node;
+      drop(node);
+    },
+    [drop]
+  );
+
   return (
     <div className="canvas-container">
       <div
-        ref={(node) => {
-          canvasRef.current = node;
-          drop(node);
-        }}
+        ref={setRefs}
         className="canvas"
         style={{
           width: project.display.width,
