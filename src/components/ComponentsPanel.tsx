@@ -1,5 +1,6 @@
 import { useDrag } from "react-dnd";
 import { ComponentType } from "../types";
+import ImageLibrary from "./ImageLibrary";
 
 const COMPONENTS = [
   { type: ComponentType.Label, icon: "T", label: "Label" },
@@ -51,6 +52,7 @@ export default function ComponentsPanel() {
           label={comp.label}
         />
       ))}
+      <ImageLibrary />
     </div>
   );
 }

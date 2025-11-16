@@ -5,6 +5,10 @@ interface AppState {
   project: Project;
   selectedComponent: Component | null;
   zoom: number;
+  showGrid: boolean;
+  gridSize: number;
+  showRulers: boolean;
+  snapToGrid: boolean;
 
   // Actions
   setProject: (project: Project) => void;
@@ -14,6 +18,10 @@ interface AppState {
   deleteComponent: (id: string) => void;
   setDisplayConfig: (config: DisplayConfig) => void;
   setZoom: (zoom: number) => void;
+  toggleGrid: () => void;
+  setGridSize: (size: number) => void;
+  toggleRulers: () => void;
+  toggleSnapToGrid: () => void;
 }
 
 const defaultDisplay: DisplayConfig = {
@@ -42,6 +50,10 @@ export const useStore = create<AppState>((set) => ({
   project: defaultProject,
   selectedComponent: null,
   zoom: 1,
+  showGrid: true,
+  gridSize: 10,
+  showRulers: true,
+  snapToGrid: false,
 
   setProject: (project) => set({ project }),
 
@@ -88,4 +100,12 @@ export const useStore = create<AppState>((set) => ({
     })),
 
   setZoom: (zoom) => set({ zoom }),
+
+  toggleGrid: () => set((state) => ({ showGrid: !state.showGrid })),
+
+  setGridSize: (size) => set({ gridSize: size }),
+
+  toggleRulers: () => set((state) => ({ showRulers: !state.showRulers })),
+
+  toggleSnapToGrid: () => set((state) => ({ snapToGrid: !state.snapToGrid })),
 }));

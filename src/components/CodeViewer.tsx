@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { useStore } from "../store";
+import * as Tabs from "@radix-ui/react-tabs";
+import { CopyIcon, Cross2Icon, CodeIcon } from "@radix-ui/react-icons";
 
 type CodeType = "arduino" | "esphome";
 
@@ -8,21 +10,22 @@ export default function CodeViewer() {
   const { project } = useStore();
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<CodeType>("arduino");
-  const [code, setCode] = useState("");
+  const [arduinoCode, setArduinoCode] = useState("");
+  const [esphomeCode, setEsphomeCode] = useState("");
 
   const generateCode = async (type: CodeType) => {
     try {
-      let generatedCode: string;
-      if (type === "arduino") {
-        generatedCode = await invoke<string>("generate_arduino_code", {
+      if (type === "arduino" && !arduinoCode) {
+        const generatedCode = await invoke<string>("generate_arduino_code", {
           project,
         });
-      } else {
-        generatedCode = await invoke<string>("generate_esphome_code", {
+        setArduinoCode(generatedCode);
+      } else if (type === "esphome" && !esphomeCode) {
+        const generatedCode = await invoke<string>("generate_esphome_code", {
           project,
         });
+        setEsphomeCode(generatedCode);
       }
-      setCode(generatedCode);
       setActiveTab(type);
       setIsOpen(true);
     } catch (error) {
@@ -32,6 +35,7 @@ export default function CodeViewer() {
   };
 
   const copyToClipboard = () => {
+    const code = activeTab === "arduino" ? arduinoCode : esphomeCode;
     navigator.clipboard.writeText(code);
     alert("Code copied to clipboard!");
   };
@@ -39,66 +43,75 @@ export default function CodeViewer() {
   return (
     <>
       {!isOpen && (
-        <div
-          style={{
-            position: "fixed",
-            bottom: 16,
-            right: 16,
-            display: "flex",
-            gap: 8,
-          }}
-        >
+        <div className="code-viewer-fab">
           <button
+            className="fab-button"
             onClick={() => generateCode("arduino")}
-            style={{
-              padding: "12px 24px",
-              backgroundColor: "var(--color-accent)",
-              borderRadius: "4px",
-            }}
+            title="Generate Arduino Code"
           >
-            Generate Arduino Code
+            <CodeIcon />
+            <span>Arduino</span>
           </button>
           <button
+            className="fab-button"
             onClick={() => generateCode("esphome")}
-            style={{
-              padding: "12px 24px",
-              backgroundColor: "var(--color-accent)",
-              borderRadius: "4px",
-            }}
+            title="Generate ESPHome Code"
           >
-            Generate ESPHome Code
+            <CodeIcon />
+            <span>ESPHome</span>
           </button>
         </div>
       )}
 
       <div className={`code-viewer ${isOpen ? "open" : ""}`}>
-        <div className="code-viewer-header">
-          <div className="code-viewer-tabs">
-            <button
-              className={`code-viewer-tab ${
-                activeTab === "arduino" ? "active" : ""
-              }`}
-              onClick={() => generateCode("arduino")}
-            >
-              Arduino (.ino)
-            </button>
-            <button
-              className={`code-viewer-tab ${
-                activeTab === "esphome" ? "active" : ""
-              }`}
-              onClick={() => generateCode("esphome")}
-            >
-              ESPHome (.yaml)
-            </button>
+        <Tabs.Root
+          value={activeTab}
+          onValueChange={(value) => {
+            setActiveTab(value as CodeType);
+            generateCode(value as CodeType);
+          }}
+        >
+          <div className="code-viewer-header">
+            <Tabs.List className="tabs-list">
+              <Tabs.Trigger className="tabs-trigger" value="arduino">
+                Arduino (.ino)
+              </Tabs.Trigger>
+              <Tabs.Trigger className="tabs-trigger" value="esphome">
+                ESPHome (.yaml)
+              </Tabs.Trigger>
+            </Tabs.List>
+            <div className="header-actions">
+              <button className="icon-button" onClick={copyToClipboard} title="Copy code">
+                <CopyIcon />
+                <span>Copy</span>
+              </button>
+              <button className="icon-button" onClick={() => setIsOpen(false)} title="Close">
+                <Cross2Icon />
+              </button>
+            </div>
           </div>
-          <div style={{ display: "flex", gap: 8 }}>
-            <button onClick={copyToClipboard}>Copy</button>
-            <button onClick={() => setIsOpen(false)}>Close</button>
+
+          <div className="code-viewer-content">
+            <Tabs.Content className="tabs-content" value="arduino">
+              {arduinoCode ? (
+                <pre>{arduinoCode}</pre>
+              ) : (
+                <div className="empty-state">
+                  <p>Generate Arduino code to see it here</p>
+                </div>
+              )}
+            </Tabs.Content>
+            <Tabs.Content className="tabs-content" value="esphome">
+              {esphomeCode ? (
+                <pre>{esphomeCode}</pre>
+              ) : (
+                <div className="empty-state">
+                  <p>Generate ESPHome code to see it here</p>
+                </div>
+              )}
+            </Tabs.Content>
           </div>
-        </div>
-        <div className="code-viewer-content">
-          <pre>{code}</pre>
-        </div>
+        </Tabs.Root>
       </div>
     </>
   );
